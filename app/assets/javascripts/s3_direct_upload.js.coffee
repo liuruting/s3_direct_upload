@@ -1,6 +1,8 @@
 #= require jquery-fileupload/basic
 #= require jquery-fileupload/vendor/tmpl
-
+#= require jquery-fileupload/jquery.fileupload-process
+#= require jquery-fileupload/jquery.fileupload-validate
+ 
 $ = jQuery
 
 $.fn.S3Uploader = (options) ->
@@ -16,6 +18,7 @@ $.fn.S3Uploader = (options) ->
 
   settings =
     path: ''
+    acceptFileTypes: /(.|\/)(gif|jpe?g|png)$/i
     additional_data: null
     before_add: null
     remove_completed_progress_bar: true
@@ -32,11 +35,27 @@ $.fn.S3Uploader = (options) ->
     settings.click_submit_target.click ->
       form.submit() for form in forms_for_submit
       false
-
+      
+      
+  originalAdd = $.blueimp.fileupload.prototype.options.add
+  @currentFile = 0
+  
   setUploadForm = ->
     $uploadForm.fileupload
 
+      acceptFileTypes: settings.acceptFileTypes
+      dataType: "xml"
+      
       add: (e, data) ->
+
+        console.log("add called with:", e, data)
+        if @currentFile == data.originalFiles.length - 1
+          console.log("LAST FILE")
+        else
+          @currentFile += 1
+
+        originalAdd.call(this, e, data);
+        
         file = data.files[0]
         file.unique_id = Math.random().toString(36).substr(2,16)
 
