@@ -58,7 +58,7 @@ $.fn.S3Uploader = (options) ->
             data.submit()
 
           $("div.status-col i.cancel").eq(-1).on "click", -> # individual cancel
-            $(this).parent().parent().remove()
+            $(this).closest(".upload").remove()
 
           if settings.click_submit_target
             if settings.allow_multiple_files
