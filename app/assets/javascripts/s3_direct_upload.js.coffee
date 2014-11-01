@@ -1,3 +1,4 @@
+#= require jquery-fileupload/vendor/tmpl
 
 $ = jQuery
 
